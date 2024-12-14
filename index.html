@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Behavior Detection</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .login-container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            text-align: center;
+        }
+        .login-container h2 {
+            margin-bottom: 20px;
+        }
+        .login-container input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .login-container button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+        .login-container button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        .message {
+            margin-top: 10px;
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-container">
+    <h2>Login</h2>
+    <input type="text" id="username" placeholder="Username" />
+    <input type="password" id="password" placeholder="Password" />
+    <button id="loginButton" onclick="attemptLogin()">Login</button>
+    <p id="message" class="message"></p>
+</div>
+
+<script>
+    let failedAttempts = 0;
+    const MAX_ATTEMPTS = 3;
+    const LOCK_TIME = 30000; // Lock time in milliseconds (e.g., 30 seconds)
+
+    function attemptLogin() {
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        const message = document.getElementById('message');
+        const loginButton = document.getElementById('loginButton');
+
+        // Simulate login validation
+        if (username !== 'admin' || password !== 'password') {
+            failedAttempts++;
+            if (failedAttempts >= MAX_ATTEMPTS) {
+                message.textContent = `Account locked. Try again after 30 seconds.`;
+                loginButton.disabled = true;
+                setTimeout(() => {
+                    failedAttempts = 0;
+                    loginButton.disabled = false;
+                    message.textContent = '';
+                }, LOCK_TIME);
+            } else {
+                message.textContent = `Invalid login. Attempt ${failedAttempts} of ${MAX_ATTEMPTS}.`;
+            }
+        } else {
+            message.style.color = 'green';
+            message.textContent = 'Login successful!';
+            failedAttempts = 0;
+        }
+    }
+</script>
+
+</body>
+</html>
